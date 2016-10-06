@@ -46,8 +46,8 @@ abstract public class JavaRunGenerator extends BaseGenerator {
         jolokiaPort    {{ d = "8778"; }},
         prometheusPort {{ d = "9779"; }},
         baseDir        {{ d = "/deployments"; }},
-        assemblyRef    {{ d = null; }},
-        fatJar         {{ d = null; }};
+        assemblyRef,
+        fatJar;
 
         public String def() { return d; } protected String d;
     }

@@ -57,7 +57,7 @@ public class SpringBootGenerator extends JavaRunGenerator {
         if (Strings.isNullOrEmpty(fatJarConfig)) {
             boolean springBootRepackage = isSpringBootRepackage();
             if (springBootRepackage) {
-                log.info("Using fat jar packaging as the spring boot plugin is using `repackage` goal execution");
+                log.verbose("fat-jar packaging detected");
                 return true;
             }
         }

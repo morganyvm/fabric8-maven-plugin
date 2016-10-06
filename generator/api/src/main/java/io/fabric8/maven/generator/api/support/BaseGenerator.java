@@ -143,11 +143,11 @@ abstract public class BaseGenerator implements Generator {
     }
 
     private String getConfigWithSystemFallbackAndDefault(Config name, String key, String defaultVal) {
-        String value = getConfig(name);
+        String value = getConfig(name, null);
         if (value == null) {
             value = Configs.getPropertyWithSystemAsFallback(getProject().getProperties(), key);
         }
-        return value != null ? value : defaultVal;
+        return value != null ? value : (defaultVal != null ? defaultVal : name.def());
     }
     protected void addLatestTagIfSnapshot(BuildImageConfiguration.Builder buildBuilder) {
         MavenProject project = getProject();
