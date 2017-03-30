@@ -53,6 +53,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.repository.RepositorySystem;
 
 /**
  * Builds the docker images configured for this project via a Docker or S2I binary build.
@@ -164,6 +165,9 @@ public class BuildMojo extends io.fabric8.maven.docker.BuildMojo {
     @Component
     protected GoalFinder goalFinder;
 
+    @Component
+    protected RepositorySystem repositorySystem;
+
     // Access for creating OpenShift binary builds
     private ClusterAccess clusterAccess;
 
@@ -206,6 +210,7 @@ public class BuildMojo extends io.fabric8.maven.docker.BuildMojo {
                 .platformMode(mode)
                 .dockerServiceHub(hub)
                 .buildServiceConfig(getBuildServiceConfig())
+                .repositorySystem(repositorySystem)
                 .build();
 
         super.executeInternal(hub);
@@ -298,6 +303,13 @@ public class BuildMojo extends io.fabric8.maven.docker.BuildMojo {
                 .mode(platformMode)
                 .strategy(buildStrategy)
                 .useProjectClasspath(useProjectClasspath)
+                .fabric8ServiceHub(new Fabric8ServiceHub.Builder()
+                        .log(log)
+                        .clusterAccess(clusterAccess)
+                        .platformMode(mode)
+                        .repositorySystem(repositorySystem)
+                        .build()
+                )
                 .build();
     }
 
