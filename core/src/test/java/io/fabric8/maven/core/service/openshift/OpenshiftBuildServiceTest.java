@@ -40,6 +40,7 @@ import io.fabric8.openshift.api.model.NamedTagEventListBuilder;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.fabric8.openshift.server.mock.OpenShiftMockServer;
 
+import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,8 +57,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JMockit.class)
 public class OpenshiftBuildServiceTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenshiftBuildServiceTest.class);
-
     private String baseDir = "target/test-files/openshift-build-service";
 
     private String projectName = "myapp";
@@ -69,6 +68,12 @@ public class OpenshiftBuildServiceTest {
 
     @Mocked
     private io.fabric8.maven.docker.util.Logger logger;
+
+    @Mocked
+    private MojoParameters dockerMojoParameters;
+
+    @Mocked
+    private MavenProject project;
 
     private ImageConfiguration image;
 
@@ -83,8 +88,9 @@ public class OpenshiftBuildServiceTest {
         imageStreamFile.delete();
 
         new Expectations() {{
-            dockerServiceHub.getArchiveService().createDockerBuildArchive(withAny(ImageConfiguration.class.cast(null)), withAny(MojoParameters.class.cast(null)));
-            result = dockerFile;
+            dockerServiceHub.getArchiveService().createDockerBuildArchive(withAny(ImageConfiguration.class.cast(null)), withAny(MojoParameters.class.cast(null))); result = dockerFile;
+            dockerMojoParameters.getProject(); minTimes = 0;
+            project.getArtifactId(); result = projectName; minTimes = 0;
         }};
 
         image = new ImageConfiguration.Builder()
@@ -98,7 +104,8 @@ public class OpenshiftBuildServiceTest {
                 .buildDirectory(baseDir)
                 .buildRecreateMode(BuildRecreateMode.none)
                 .s2iBuildNameSuffix("-s2i-suffix2")
-                .openshiftBuildStrategy(OpenShiftBuildStrategy.s2i);
+                .openshiftBuildStrategy(OpenShiftBuildStrategy.s2i)
+                .dockerMojoParameters(dockerMojoParameters);
     }
 
     @Test

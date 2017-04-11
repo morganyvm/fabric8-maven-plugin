@@ -39,9 +39,8 @@ public interface BuildService {
 
     /**
      * Post processing step called after all images has been build
-     * @param config build configuration
      */
-    void postProcess(BuildServiceConfig config);
+    void postProcess();
 
     /**
      * Class to hold configuration parameters for the building service.
@@ -95,7 +94,7 @@ public interface BuildService {
             return buildDirectory;
         }
 
-        public Object getArtifactId() {
+        public String getArtifactId() {
             return dockerMojoParameters.getProject().getArtifactId();
         }
 

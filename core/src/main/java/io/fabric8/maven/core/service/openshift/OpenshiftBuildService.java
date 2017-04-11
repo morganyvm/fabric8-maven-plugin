@@ -103,7 +103,7 @@ public class OpenshiftBuildService implements BuildService {
     }
 
     @Override
-    public void postProcess(BuildServiceConfig config) {
+    public void postProcess() {
         config.attachArtifact("is", getImageStreamFile(config));
     }
 

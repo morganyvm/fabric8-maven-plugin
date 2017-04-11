@@ -221,7 +221,7 @@ public class BuildMojo extends io.fabric8.maven.docker.BuildMojo {
 
         super.executeInternal(hub);
 
-        fabric8ServiceHub.getBuildService().postProcess(getBuildServiceConfig());
+        fabric8ServiceHub.getBuildService().postProcess();
     }
 
     @Override
