@@ -20,9 +20,9 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
-import io.fabric8.maven.core.util.JSONUtil;
+import io.fabric8.maven.core.util.ResourceUtil;
 import io.fabric8.maven.docker.util.Logger;
-import io.fabric8.utils.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,7 +47,7 @@ public class InitContainerHandler {
     public JSONObject getInitContainer(PodTemplateSpecBuilder builder, String name) {
         if (builder.hasMetadata()) {
             String initContainerAnnotation = builder.buildMetadata().getAnnotations().get(INIT_CONTAINER_ANNOTATION);
-            if (Strings.isNotBlank(initContainerAnnotation)) {
+            if (StringUtils.isNotBlank(initContainerAnnotation)) {
                 JSONArray initContainers = new JSONArray(initContainerAnnotation);
                 for (int i = 0; i < initContainers.length(); i++) {
                     JSONObject obj = initContainers.getJSONObject(i);
@@ -93,7 +93,7 @@ public class InitContainerHandler {
         String name = initContainer.getString("name");
         JSONObject existing = getInitContainer(builder, name);
         if (existing != null) {
-            if (JSONUtil.equals(existing, initContainer)) {
+            if (ResourceUtil.jsonEquals(existing, initContainer)) {
                 log.warn("Trying to add init-container %s a second time. Ignoring ....", name);
                 return;
             } else {
@@ -105,7 +105,7 @@ public class InitContainerHandler {
         }
         ensureMetadata(builder);
         String initContainerAnnotation = builder.buildMetadata().getAnnotations().get(INIT_CONTAINER_ANNOTATION);
-        JSONArray initContainers = Strings.isNullOrBlank(initContainerAnnotation) ? new JSONArray() : new JSONArray(initContainerAnnotation);
+        JSONArray initContainers = StringUtils.isBlank(initContainerAnnotation) ? new JSONArray() : new JSONArray(initContainerAnnotation);
         initContainers.put(initContainer);
         builder.editMetadata().addToAnnotations(INIT_CONTAINER_ANNOTATION, initContainers.toString()).endMetadata();
     }

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
-import io.fabric8.maven.core.util.JSONUtil;
+import io.fabric8.maven.core.util.ResourceUtil;
 import io.fabric8.maven.docker.util.Logger;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -32,7 +32,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author roland
@@ -128,7 +132,7 @@ public class InitContainerHandlerTest {
             JSONArray got = new JSONArray(containers);
             assertEquals(got.length(), initContainers.length);
             for (int i = 0; i < initContainers.length; i++) {
-                assertTrue(JSONUtil.equals(got.getJSONObject(i), initContainers[i]));
+                assertTrue(ResourceUtil.jsonEquals(got.getJSONObject(i), initContainers[i]));
             }
         }
     }

@@ -16,21 +16,6 @@
 
 package io.fabric8.maven.core.util;
 
-import io.fabric8.utils.Objects;
-import io.fabric8.utils.Strings;
-import io.fabric8.utils.Zips;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.StringUtils;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.archiver.tar.TarArchiver;
-import org.codehaus.plexus.archiver.tar.TarLongFileMode;
-import org.codehaus.plexus.archiver.zip.ZipArchiver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,7 +23,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +30,18 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+
+import com.google.common.base.Objects;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.archiver.tar.TarArchiver;
+import org.codehaus.plexus.archiver.tar.TarLongFileMode;
+import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author roland
@@ -256,16 +252,6 @@ public class MavenUtil {
         }
     }
 
-    public static void createArchive(File sourceDir, File destinationFile, JarArchiver archiver) throws MojoExecutionException {
-        try {
-            archiver.addDirectory(sourceDir);
-            archiver.setDestFile(destinationFile);
-            archiver.createArchive();
-        } catch (IOException e) {
-            throw new MojoExecutionException("Failed to create archive " + destinationFile + ": " + e, e);
-        }
-    }
-
     /**
      * Returns the version from the list of pre-configured versions of common groupId/artifact pairs
      */
@@ -282,7 +268,7 @@ public class MavenUtil {
             throw new IOException("Failed to load " + path + ". " + e, e);
         }
         String version = properties.getProperty("version");
-        if (Strings.isNullOrBlank(version)) {
+        if (StringUtils.isBlank(version)) {
             throw new IOException("No version property in " + path);
 
         }

@@ -1,5 +1,9 @@
 package io.fabric8.maven.enricher.fabric8;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -14,10 +18,6 @@ import io.fabric8.maven.enricher.api.Kind;
 import io.fabric8.maven.enricher.api.util.InitContainerHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Enriches declarations with auto-TLS annotations, required secrets reference,

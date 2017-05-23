@@ -30,12 +30,12 @@ import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.maven.core.config.ResourceConfig;
 import io.fabric8.maven.core.config.VolumeConfig;
-import io.fabric8.maven.core.util.KubernetesResourceUtil;
+import io.fabric8.maven.core.util.kubernetes.KubernetesResourceUtil;
 import io.fabric8.maven.docker.access.PortMapping;
 import io.fabric8.maven.docker.config.BuildImageConfiguration;
 import io.fabric8.maven.docker.config.ImageConfiguration;
-import io.fabric8.utils.Strings;
-
+import io.fabric8.maven.docker.util.ImageName;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.project.MavenProject;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -85,7 +85,7 @@ class ContainerHandler {
     private String getImagePullPolicy(ResourceConfig config) {
         String pullPolicy = config.getImagePullPolicy();
         String version = project.getVersion();
-        if (Strings.isNullOrBlank(pullPolicy) &&
+        if (StringUtils.isBlank(pullPolicy) &&
             version != null && version.endsWith("SNAPSHOT")) {
             // TODO: Is that what we want ?
             return "PullAlways";
@@ -94,12 +94,12 @@ class ContainerHandler {
     }
 
     private String getImageName(ImageConfiguration imageConfiguration) {
-        if (Strings.isNullOrBlank(imageConfiguration.getName())) {
+        if (StringUtils.isBlank(imageConfiguration.getName())) {
             return imageConfiguration.getName();
         }
 
         String prefix = "";
-        if (Strings.isNotBlank(imageConfiguration.getRegistry())) {
+        if (StringUtils.isNotBlank(imageConfiguration.getRegistry())) {
             prefix = imageConfiguration.getRegistry() + "/";
         }
         return prefix + imageConfiguration.getName();

@@ -18,15 +18,17 @@ package io.fabric8.maven.enricher.standard;
 import java.util.Collections;
 import java.util.TreeMap;
 
-import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.PodTemplate;
+import io.fabric8.kubernetes.api.model.PodTemplateBuilder;
 import io.fabric8.maven.core.config.ProcessorConfig;
-import io.fabric8.maven.enricher.api.BaseEnricher;
 import io.fabric8.maven.enricher.api.EnricherContext;
 import io.fabric8.maven.enricher.api.util.InitContainerHandler;
-import io.fabric8.utils.Strings;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -128,7 +130,7 @@ public class VolumePermissionEnricherTest {
 
             JSONObject jo = ja.getJSONObject(0);
             assertEquals(tc.initContainerName, jo.get("name"));
-            String permission = Strings.isNullOrBlank(tc.permission) ? "777" : tc.permission;
+            String permission = StringUtils.isBlank(tc.permission) ? "777" : tc.permission;
             JSONArray chmodCmd = new JSONArray();
             chmodCmd.put("chmod");
             chmodCmd.put(permission);
